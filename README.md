@@ -157,19 +157,20 @@ To generate a cert and key:
 
   ```bash
   $ sudo mokutil --import MOK.der
-  # remember the password, then restart the machine
+  # remember the password, then reboot the machine
+  $ sudo reboot
   ```
 
 - install driver file
 
-```
-$ sudo mkdir -p "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
-$ sudo cp isgx.ko "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
-$ sudo sh -c "cat /etc/modules | grep -Fxq isgx || echo isgx >> /etc/modules"
-$ sudo kmodsign sha512 MOK.priv MOK.der isgx
-$ sudo /sbin/depmod
-$ sudo /sbin/modprobe isgx
-```
+  ```
+  $ sudo mkdir -p "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
+  $ sudo cp isgx.ko "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
+  $ sudo sh -c "cat /etc/modules | grep -Fxq isgx || echo isgx >> /etc/modules"
+  $ sudo kmodsign sha512 MOK.priv MOK.der "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx/isgx.ko"
+  $ sudo /sbin/depmod
+  $ sudo /sbin/modprobe isgx
+  ```
 
 On Red Hat Enterprise Linux Server or CentOS, need to run below command on each reboot
 
